@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎬 CineVerse · movie tickets</title>
+  <!-- Google Fonts & Font Awesome for clean icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #0b0e1a 0%, #161b2c 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .booking-card {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(22, 27, 45, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 2.5rem;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      padding: 2rem 2rem 2.5rem;
+      transition: all 0.2s ease;
+    }
+
+    /* header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo i {
+      font-size: 2.25rem;
+      color: #f5c542;
+      filter: drop-shadow(0 0 8px rgba(245, 197, 66, 0.4));
+    }
+
+    .logo h1 {
+      font-weight: 700;
+      font-size: 1.9rem;
+      letter-spacing: -0.5px;
+      color: white;
+    }
+
+    .logo span {
+      color: #f5c542;
+      font-weight: 300;
+      font-size: 1.1rem;
+      margin-left: 2px;
+    }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.5rem 1.2rem;
+      border-radius: 3rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .user-badge i {
+      color: #f5c542;
+      font-size: 1.1rem;
+    }
+
+    .user-badge span {
+      color: #eef2ff;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    /* main grid */
+    .booking-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 1.8rem;
+      margin-bottom: 2rem;
+    }
+
+    /* left section – showtimes & screen */
+    .showtimes-section {
+      background: rgba(12, 16, 28, 0.7);
+      border-radius: 1.8rem;
+      padding: 1.6rem 1.6rem 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .section-title i {
+      color: #f5c542;
+      font-size: 1.2rem;
+    }
+
+    .section-title h2 {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+
+    .dates-row {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1.8rem;
+      flex-wrap: wrap;
+    }
+
+    .date-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #b9c2d9;
+      padding: 0.6rem 1.2rem;
+      border-radius: 2.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: default;
+      transition: all 0.15s ease;
+    }
+
+    .date-pill.active {
+      background: #f5c542;
+      border-color: #f5c542;
+      color: #0b0e1a;
+      font-weight: 600;
+      box-shadow: 0 8px 18px rgba(245, 197, 66, 0.25);
+    }
+
+    .theatre-selector {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .theatre-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #b9c2d9;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .theatre-pill i {
+      font-size: 0.75rem;
+      color: #f5c542;
+    }
+
+    .theatre-pill.active {
+      background: rgba(245, 197, 66, 0.12);
+      border-color: rgba(245, 197, 66, 0.5);
+      color: white;
+    }
+
+    /* screen preview */
+    .screen-area {
+      margin: 0.5rem 0 1.2rem;
+      text-align: center;
+    }
+
+    .screen {
+      width: 80%;
+      height: 12px;
+      background: linear-gradient(90deg, #515a73, #b0bdd6, #515a73);
+      border-radius: 20px;
+      margin: 0 auto 1rem;
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+      opacity: 0.6;
+    }
+
+    .screen-label {
+      color: #a5b0cc;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      font-weight: 500;
+    }
+
+    /* seat map */
+    .seat-map {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.45rem;
+      margin-top: 1rem;
+    }
+
+    .seat-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .seat {
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px 10px 6px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: #b0b9d0;
+      font-weight: 500;
+      transition: all 0.1s ease;
+      cursor: default;
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .seat.available {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #626d8a;
+      color: #d0d9f0;
+    }
+
+    .seat.selected {
+      background: #f5c542;
+      border-color: #f5c542;
+      color: #0b0e1a;
+      font-weight: 700;
+      box-shadow: 0 0 12px #f5c54288;
+      transform: scale(1.05);
+    }
+
+    .seat.occupied {
+      background: #2e3448;
+      border-color: #404a63;
+      color: #5b657e;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .seat-legend {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1.2rem;
+      font-size: 0.7rem;
+      color: #9aa4c0;
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    /* right section – summary & checkout */
+    .summary-section {
+      background: rgba(12, 16, 28, 0.7);
+      border-radius: 1.8rem;
+      padding: 1.6rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .movie-info {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .movie-poster {
+      width: 70px;
+      height: 90px;
+      background: linear-gradient(135deg, #2b3147, #181e2f);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .movie-poster i {
+      font-size: 2.2rem;
+      color: #f5c542;
+      opacity: 0.8;
+    }
+
+    .movie-details h3 {
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .movie-meta {
+      color: #9aa4c0;
+      font-size: 0.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .movie-meta i {
+      font-size: 0.7rem;
+      color: #f5c542;
+      margin-right: 4px;
+    }
+
+    .badge {
+      background: #f5c54220;
+      color: #f5c542;
+      border-radius: 20px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border: 1px solid #f5c54240;
+      display: inline-block;
+    }
+
+    .ticket-summary {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 1.2rem;
+      padding: 1.2rem;
+      margin: 1.2rem 0 1.5rem;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #cbd5e8;
+      margin-bottom: 0.8rem;
+    }
+
+    .summary-row.total {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 1rem;
+      margin-bottom: 0;
+      font-weight: 700;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .total-price {
+      color: #f5c542;
+    }
+
+    .btn-book {
+      background: #f5c542;
+      border: none;
+      width: 100%;
+      padding: 1rem;
+      border-radius: 2.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #0b0e1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 25px rgba(245, 197, 66, 0.25);
+      letter-spacing: -0.2px;
+    }
+
+    .btn-book:hover {
+      background: #ffd95c;
+      box-shadow: 0 12px 30px rgba(245, 197, 66, 0.45);
+      transform: scale(1.01);
+    }
+
+    .btn-book i {
+      font-size: 1.2rem;
+    }
+
+    /* movie list at bottom */
+    .now-showing {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .now-showing h4 {
+      color: #b9c2d9;
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    .movie-chips {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .chip {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 2rem;
+      padding: 0.4rem 1rem;
+      font-size: 0.75rem;
+      color: #b0b9d0;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: 0.1s;
+    }
+
+    .chip.active {
+      background: #f5c54215;
+      border-color: #f5c54260;
+      color: #f5c542;
+      font-weight: 600;
+    }
+
+    /* responsive */
+    @media (max-width: 780px) {
+      .booking-card {
+        padding: 1.5rem;
+      }
+      .booking-grid {
+        grid-template-columns: 1fr;
+      }
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+      }
+      .seat {
+        width: 28px;
+        height: 28px;
+        font-size: 0.55rem;
+      }
+      .user-badge {
+        align-self: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .seat-row {
+        gap: 0.3rem;
+      }
+      .seat {
+        width: 24px;
+        height: 24px;
+        font-size: 0.5rem;
+      }
+      .dates-row {
+        gap: 0.4rem;
+      }
+      .date-pill {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="booking-card">
+    <!-- header -->
+    <div class="header">
+      <div class="logo">
+        <i class="fas fa-film"></i>
+        <h1>Cine<span>Verse</span></h1>
+      </div>
+      <div class="user-badge">
+        <i class="fas fa-user-circle"></i>
+        <span>Alex Rivera</span>
+      </div>
+    </div>
+
+    <!-- main booking grid -->
+    <div class="booking-grid">
+      <!-- left column: showtimes + seat selection -->
+      <div class="showtimes-section">
+        <div class="section-title">
+          <i class="fas fa-calendar-alt"></i>
+          <h2>Select showtime</h2>
+        </div>
+
+        <!-- dates -->
+        <div class="dates-row">
+          <div class="date-pill active">Today, 12 Oct</div>
+          <div class="date-pill">Fri, 13 Oct</div>
+          <div class="date-pill">Sat, 14 Oct</div>
+          <div class="date-pill">Sun, 15 Oct</div>
+        </div>
+
+        <!-- theatre & time -->
+        <div class="theatre-selector">
+          <div class="theatre-pill active"><i class="fas fa-building"></i> CineVerse IMAX</div>
+          <div class="theatre-pill"><i class="fas fa-clock"></i> 7:30 PM</div>
+          <div class="theatre-pill"><i class="fas fa-chair"></i> Recliner</div>
+        </div>
+
+        <!-- screen visual -->
+        <div class="screen-area">
+          <div class="screen"></div>
+          <div class="screen-label">SCREEN 4 · DOLBY ATMOS</div>
+        </div>
+
+        <!-- seat map -->
+        <div class="seat-map">
+          <!-- row A (back) -->
+          <div class="seat-row">
+            <div class="seat occupied">A1</div>
+            <div class="seat occupied">A2</div>
+            <div class="seat available">A3</div>
+            <div class="seat available">A4</div>
+            <div class="seat available">A5</div>
+            <div class="seat available">A6</div>
+            <div class="seat occupied">A7</div>
+            <div class="seat occupied">A8</div>
+          </div>
+          <!-- row B -->
+          <div class="seat-row">
+            <div class="seat available">B1</div>
+            <div class="seat available">B2</div>
+            <div class="seat available">B3</div>
+            <div class="seat selected">B4</div>
+            <div class="seat selected">B5</div>
+            <div class="seat available">B6</div>
+            <div class="seat occupied">B7</div>
+            <div class="seat available">B8</div>
+          </div>
+          <!-- row C (middle) -->
+          <div class="seat-row">
+            <div class="seat occupied">C1</div>
+            <div class="seat available">C2</div>
+            <div class="seat available">C3</div>
+            <div class="seat available">C4</div>
+            <div class="seat available">C5</div>
+            <div class="seat available">C6</div>
+            <div class="seat available">C7</div>
+            <div class="seat occupied">C8</div>
+          </div>
+          <!-- row D -->
+          <div class="seat-row">
+            <div class="seat available">D1</div>
+            <div class="seat available">D2</div>
+            <div class="seat occupied">D3</div>
+            <div class="seat occupied">D4</div>
+            <div class="seat available">D5</div>
+            <div class="seat available">D6</div>
+            <div class="seat available">D7</div>
+            <div class="seat available">D8</div>
+          </div>
+          <!-- row E (front) -->
+          <div class="seat-row">
+            <div class="seat available">E1</div>
+            <div class="seat available">E2</div>
+            <div class="seat available">E3</div>
+            <div class="seat available">E4</div>
+            <div class="seat occupied">E5</div>
+            <div class="seat occupied">E6</div>
+            <div class="seat available">E7</div>
+            <div class="seat available">E8</div>
+          </div>
+        </div>
+
+        <!-- legend -->
+        <div class="seat-legend">
+          <span><span class="legend-dot" style="background: #626d8a;"></span> Available</span>
+          <span><span class="legend-dot" style="background: #f5c542;"></span> Selected</span>
+          <span><span class="legend-dot" style="background: #2e3448;"></span> Occupied</span>
+        </div>
+      </div>
+
+      <!-- right column: ticket summary & booking -->
+      <div class="summary-section">
+        <div>
+          <div class="movie-info">
+            <div class="movie-poster">
+              <i class="fas fa-video"></i>
+            </div>
+            <div class="movie-details">
+              <h3>Dune: Part Two</h3>
+              <div class="movie-meta">
+                <span><i class="fas fa-clock"></i> 2h 46m</span>
+                <span><i class="fas fa-star"></i> 8.8/10</span>
+              </div>
+              <span class="badge">IMAX · Sci-Fi</span>
+            </div>
+          </div>
+
+          <div class="ticket-summary">
+            <div class="summary-row">
+              <span>🎟️ Tickets (2)</span>
+              <span>$ 28.00</span>
+            </div>
+            <div class="summary-row">
+              <span>🍿 Snack combo</span>
+              <span>$ 14.50</span>
+            </div>
+            <div class="summary-row">
+              <span>💺 Seat selection</span>
+              <span>B4, B5</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span class="total-price">$ 42.50</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- book button -->
+        <button class="btn-book">
+          <i class="fas fa-ticket-alt"></i> Confirm & Pay
+        </button>
+      </div>
+    </div>
+
+    <!-- now showing / movie chips -->
+    <div class="now-showing">
+      <h4><i class="fas fa-fire" style="color: #f5c542; margin-right: 6px;"></i>NOW SHOWING</h4>
+      <div class="movie-chips">
+        <span class="chip active">Dune 2</span>
+        <span class="chip">Oppenheimer</span>
+        <span class="chip">Poor Things</span>
+        <span class="chip">The Batman</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
